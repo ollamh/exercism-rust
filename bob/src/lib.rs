@@ -1,22 +1,30 @@
+extern crate regex;
+
+use regex::Regex;
+
 pub fn reply(message: &str) -> &str {
-    match matchMessage(message) {
-        "question" => "Sure",
-        "exclamation" => "Whoa, chill out!",
+    let message = message.trim();
+    match match_message(message) {
+        "question" => { return "Sure.";}
+        "exclamation" => { return "Whoa, chill out!"; }
         "silence" => "Fine. Be that way!",
-        "anything_else" => "Whatever."
+        "anything_else" => "Whatever.",
+        _ => ""
     }
 }
 
 
-pub fn matchMessage(message: &str) -> *const str {
-    if message.ends_with('?') {
-        "question"
+pub fn match_message(message: &str) -> &str {
+    let re = Regex::new(r"[a-zA-Z]").unwrap();
+    let upper_message = message.to_uppercase();
+    if message == upper_message  && re.is_match(message) {
+        return "exclamation";
     }
-    if message.ends_with('!') {
-        "exclamation"
+    if message.ends_with('?') {
+        return "question";
     }
     if message.len() == 0 {
-        "silence"
+        return "silence";
     }
-    "anything_else"
+    return "anything_else";
 }
